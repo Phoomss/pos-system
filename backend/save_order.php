@@ -85,7 +85,7 @@
         $row3 = mysqli_fetch_array($query3);
         $productPrice = $row3['p_price'];
         $total = $productPrice * $qty;
-        $total_order_amount += $total; // Add to total amount
+        $total_order_amount += $total;
 
         $sql4 = "INSERT INTO order_details_table (o_id, p_id, qty, od_date, total) 
                  VALUES ('$order_id', '$p_id', '$qty', '$order_date', '$total')";
@@ -163,6 +163,8 @@
         $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'สถานะ: ') . iconv('UTF-8', 'TIS-620', $od_status), 0, 1);
         $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'ลำดับคิว: ') . $q_order, 0, 1);
         $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'ยอดเงินรวม: ') . $total_order_amount . iconv('UTF-8', 'TIS-620', ' บาท'), 0, 1);
+        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'ยอดเงินที่รับชำระ: ') . $pay_amount2 . iconv('UTF-8', 'TIS-620', ' บาท'), 0, 1);
+        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'เงินทอน: ') . ($pay_amount2 - $total_order_amount) . iconv('UTF-8', 'TIS-620', ' บาท'), 0, 1);
 
         $pdf->Cell(0, 2, iconv('UTF-8', 'TIS-620', 'รายการสินค้า'), 0, 1, 'C');
         foreach ($_SESSION['cart'] ?? [] as $p_id => $qty) {
