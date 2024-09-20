@@ -19,7 +19,6 @@
 
         $date1 = date("Ymd_His");
         $numrand = (mt_rand());
-        $p_image = (isset($_POST['p_image']) ? $_POST['p_image'] : '');
         $upload = $_FILES['p_image']['name'];
         if ($upload != '') {
             $path = "../uploads/";
@@ -33,7 +32,7 @@
 
         $sql = "INSERT INTO products_table (p_name, p_detail, p_price, p_image)
                 VALUES ('$p_name', '$p_detail', '$p_price', '$newname')";
-        $result = mysqli_query($conn, $sql) or die("Error in query: $sql " . mysqli_error($conn) . "<br>$sql");
+        $result = mysqli_query($conn, $sql);
 
         if ($result) {
             echo "<script>
@@ -66,7 +65,6 @@
 
         $date1 = date("Ymd_His");
         $numrand = (mt_rand());
-        $p_image = (isset($_POST['p_image']) ? $_POST['p_image'] : '');
         $upload = $_FILES['p_image']['name'];
         if ($upload != '') {
             $path = "../uploads/";
@@ -84,9 +82,7 @@
                 p_price = '$p_price', 
                 p_image = '$newname' 
                 WHERE p_id = $p_id";
-        $result = mysqli_query($conn, $sql) or die("Error in query: $sql " . mysqli_error($conn) . "<br>$sql");
-
-        $conn->close();
+        $result = mysqli_query($conn, $sql);
 
         if ($result) {
             echo "<script>

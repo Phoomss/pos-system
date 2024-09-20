@@ -11,7 +11,7 @@ if (session_status() == PHP_SESSION_NONE) {
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="../user-info.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <?php
@@ -45,8 +45,8 @@ if (session_status() == PHP_SESSION_NONE) {
                 </li>
                 <li class="nav-item">
                     <a href="list_sale.php" class="nav-link <?php if ($menu == "list_sale.php") {
-                                                            echo "active";
-                                                        } ?> ">
+                                                                echo "active";
+                                                            } ?> ">
                         <i class="nav-icon fas fa-clipboard-list"></i>
                         <p>รายการขาย</p>
                     </a>
