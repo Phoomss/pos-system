@@ -1,0 +1,22 @@
+<?php
+require('./pdf/fpdf.php');
+
+// ตั้งค่าขนาดกระดาษเป็น 10.2 x 29.7 เซนติเมตร
+$pdf = new FPDF('P', 'cm', array(10.2, 29.7));
+$pdf->AddPage();
+
+// เพิ่มฟอนต์ Sarabun ที่สร้างจาก MakeFont (ตัวหนา)
+$pdf->AddFont('Sarabun-Bold', '', 'Sarabun-Bold.php');
+
+// ตั้งค่าฟอนต์ Sarabun-Bold ขนาด 16 และจัดตำแหน่งข้อความให้อยู่ตรงกลาง
+$pdf->SetFont('Sarabun-Bold', '', 16);
+
+// ความกว้างของหน้ากระดาษ
+$width = $pdf->GetPageWidth();
+
+// ใช้ Cell เพื่อจัดข้อความให้อยู่ตรงกลาง (alignment 'C') และแปลงข้อความ UTF-8 เป็น TIS-620
+$pdf->Cell($width - 2, 0, iconv('UTF-8', 'TIS-620', 'ข้าวมันไก่น้องนัน!'), 0, 1, 'C');
+
+// สร้าง PDF
+$pdf->Output();
+?>
