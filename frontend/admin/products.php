@@ -103,7 +103,9 @@ $conn->close();
                                     <?php foreach ($result as $row_product) { ?>
                                         <tr>
                                             <td><?php echo @$l += 1; ?></td>
-                                            <td><img src="../uploads/<?php echo $row_product['p_image']; ?>" width="100%"></td>
+                                            <td>
+                                            <img src="../../uploads/<?php echo $row_product['p_image']; ?>" class="img-thumbnail" width="120" alt="Product Image">
+                                            </td>
                                             <td><?php echo $row_product['p_name']; ?></td>
                                             <td><?php echo $row_product['p_detail']; ?></td>
                                             <td><?php echo $row_product['p_price']; ?></td>

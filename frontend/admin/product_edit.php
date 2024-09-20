@@ -124,7 +124,7 @@ if (isset($_GET['p_id']) && is_numeric($_GET['p_id'])) {
                                         <!-- Old Image -->
                                         <div class="form-group">
                                             <label>ภาพเก่า</label><br>
-                                            <img src="../uploads/<?php echo $row['p_image']; ?>" width="150px" alt="Old Product Image">
+                                            <img src="../../uploads/<?php echo $row['p_image']; ?>" width="300" alt="Old Product Image">
                                             <input type="hidden" name="mem_img2" value="<?php echo $row['p_image']; ?>">
                                         </div>
 

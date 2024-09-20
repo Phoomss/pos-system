@@ -36,14 +36,6 @@ if (session_status() == PHP_SESSION_NONE) {
                 </li>
                 <li class="nav-header">จัดการการขาย</li>
                 <li class="nav-item">
-                    <a href="index.php" class="nav-link <?php if ($menu == "index") {
-                                                            echo "active";
-                                                        } ?> ">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>ยอดขาย</p>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="list_sale.php" class="nav-link <?php if ($menu == "list_sale.php") {
                                                                 echo "active";
                                                             } ?> ">
