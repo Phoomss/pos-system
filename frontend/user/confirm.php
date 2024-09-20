@@ -224,12 +224,12 @@ if ($u_id != '') {
                                     </div>
                                 </div>
 
-                                <div class="from-group row align-content-center justify-content-center">
+                                <!-- <div class="from-group row align-content-center justify-content-center">
                                     <label for="od_date" class="col-sm-2 col-form-label">วันที่</label>
                                     <div class="col-sm-4">
                                         <input type="date" name="od_date" id="od_date" required class="form-control" placeholder="กรุณากรอกวันที่">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group row align-content-center justify-content-center">
                                     <label for="pay_amount1" class="col-sm-2 col-form-label">ยอดเงินที่ต้องชำระ</label>
                                     <div class="col-sm-4">
