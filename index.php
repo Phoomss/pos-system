@@ -24,7 +24,7 @@
             <p>ข้าวมันไก่น้องนัน</p>
         </div>
         <!-- /.login-logo -->
-        <div class="card">
+        <div class="card align-content-center justify-content-center">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">ล็อกอินเข้าใช้งาน</p>
 
@@ -60,11 +60,6 @@
         </div>
     </div>
     <!-- /.login-box -->
-
-    <!-- jQuery -->
-    <script src="./plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="./dist/js/adminlte.min.js"></script>
 </body>
