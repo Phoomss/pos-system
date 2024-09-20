@@ -66,7 +66,7 @@ $row = mysqli_fetch_assoc($querypay); // Fetch order data
                             echo "<td align='right'>" . number_format($rspay['total'], 2) . "</td>";
                             echo "</tr>";
                         }
-                        include('../../convertnumtothai.php');
+                        include('../../backend/convertnumtothai.php');
                         ?>
                         <tr>
                             <td></td>
