@@ -110,8 +110,8 @@ $conn->close();
 
             <!-- Main content -->
             <section class="content">
-                <div class="card card-gray">
-                    <div class="card-header">
+                <div class="card">
+                    <div class="card-header bg-black">
                         <h3 class="card-title">สินค้า IN STOCK</h3>
                     </div>
                     <br>

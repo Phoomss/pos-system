@@ -85,7 +85,7 @@
         $row3 = mysqli_fetch_array($query3);
         $productPrice = $row3['p_price'];
         $total = $productPrice * $qty;
-        $total_order_amount += $total;
+        $total_order_amount += $total; 
 
         $sql4 = "INSERT INTO order_details_table (o_id, p_id, qty, od_date, total) 
                  VALUES ('$order_id', '$p_id', '$qty', '$order_date', '$total')";
@@ -95,114 +95,25 @@
         }
     }
 
-
-    foreach ($_SESSION['cart'] ?? [] as $p_id => $qty) {
-        $sql3 = "SELECT * FROM products_table WHERE p_id=$p_id";
-        $query3 = mysqli_query($conn, $sql3);
-
-        // ตรวจสอบว่าการ query สำเร็จหรือไม่
-        if (!$query3) {
-            die("Error retrieving product details: " . mysqli_error($conn));
-        }
-
-        $row3 = mysqli_fetch_array($query3);
-
-        // แสดงข้อมูลสินค้าในรูปแบบ array
-        echo '<pre>';
-        print_r($row3);
-        echo '</pre>';
-
-        $productName = $row3['p_name'];
-        $productPrice = $row3['p_price'];
-        $total = $productPrice * $qty;
-    }
-
-    print_r($_SESSION['cart']); // ตรวจสอบเนื้อหาของตะกร้า
-    if (!isset($_SESSION['cart'])) {
-        echo "Cart is not set!";
-    } else if (!is_array($_SESSION['cart'])) {
-        echo "Cart is not an array!";
-    }
-
     // Fetch the employee name based on u_id
     $sqlEmp = "SELECT u_name FROM users_table WHERE u_id = '$u_id'";
     $queryEmp = mysqli_query($conn, $sqlEmp);
     $rowEmp = mysqli_fetch_array($queryEmp);
     $u_name = $rowEmp['u_name'] ?? 'ไม่ระบุ';
 
-    // Begin creating PDF after successful order creation
-    require('../fpdf/fpdf.php');
-
-    $pdfDirectory = '../pdf/';
-    if (!file_exists($pdfDirectory)) {
-        mkdir($pdfDirectory, 0777, true);  // Create directory if it doesn't exist
-    }
-
+    // Finalize transaction
     if ($query1) {
         mysqli_query($conn, "COMMIT");
         unset($_SESSION['cart']); // Clear the cart
 
-        // Create PDF
-        $pdf = new FPDF('P', 'cm', array(10.2, 29.7));
-        $pdf->AddPage();
-
-        // Add Thai font
-        $pdf->AddFont('Sarabun-Bold', '', 'Sarabun-Bold.php');
-        $pdf->AddFont('Sarabun-Thin', '', 'Sarabun-Thin.php');
-        $width = $pdf->GetPageWidth();
-
-        $pdf->SetFont('Sarabun-Bold', '', 16);
-        $pdf->Cell($width - 2, 0, iconv('UTF-8', 'TIS-620', 'ข้าวมันไก่น้องนัน'), 0, 1, 'C');
-
-        // Order details
-        $pdf->SetFont('Sarabun-Thin', '', 12);
-        $pdf->Cell(0, 2, iconv('UTF-8', 'TIS-620', 'รายละเอียดคำสั่งซื้อ'), 0, 1, 'C');
-        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', $order_date), 0, 1, 'C');
-        $pdf->Cell(0, 1, 'Order ID: ' . $order_id, 0, 1);
-        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'ชื่อพนักงานขาย: ') . iconv('UTF-8', 'TIS-620', $u_name), 0, 1);
-        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'สถานะ: ') . iconv('UTF-8', 'TIS-620', $od_status), 0, 1);
-        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'ลำดับคิว: ') . $q_order, 0, 1);
-        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'ยอดเงินรวม: ') . $total_order_amount . iconv('UTF-8', 'TIS-620', ' บาท'), 0, 1);
-        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'ยอดเงินที่รับชำระ: ') . $pay_amount2 . iconv('UTF-8', 'TIS-620', ' บาท'), 0, 1);
-        $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', 'เงินทอน: ') . ($pay_amount2 - $total_order_amount) . iconv('UTF-8', 'TIS-620', ' บาท'), 0, 1);
-
-        $pdf->Cell(0, 2, iconv('UTF-8', 'TIS-620', 'รายการสินค้า'), 0, 1, 'C');
-        foreach ($_SESSION['cart'] ?? [] as $p_id => $qty) {
-            $sql3 = "SELECT * FROM products_table WHERE p_id=$p_id";
-            $query3 = mysqli_query($conn, $sql3);
-
-            // ตรวจสอบว่าการ query สำเร็จหรือไม่
-            if (!$query3) {
-                die("Error retrieving product details: " . mysqli_error($conn));
-            }
-
-            $row3 = mysqli_fetch_array($query3);
-
-            // ตรวจสอบว่า $row3 มีข้อมูลหรือไม่
-            if ($row3) {
-                $productName = $row3['p_name'];
-                $productPrice = $row3['p_price'];
-                $total = $productPrice * $qty;
-
-                $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', "สินค้า: $productName | จำนวน: $qty | ราคา: $total บาท"), 0, 1);
-            } else {
-                // ถ้าไม่พบสินค้า ให้แสดงข้อความ
-                $pdf->Cell(0, 1, iconv('UTF-8', 'TIS-620', "ไม่พบสินค้า ID: $p_id"), 0, 1);
-            }
-        }
-
-        // Save the PDF file
-        $pdfFile = $pdfDirectory . $order_id . '.pdf';
-        $pdf->Output('F', $pdfFile);
-
-        // SweetAlert2 to download the PDF
+        // Success message
         echo "<script>
             Swal.fire({
                 icon: 'success',
                 title: 'สำเร็จ!',
-                text: 'เพิ่มข้อมูลเรียบร้อยแล้ว! กำลังดาวน์โหลดไฟล์ PDF...'
+                text: 'เพิ่มข้อมูลเรียบร้อยแล้ว!'
             }).then(function() {
-                window.location = '$pdfFile';
+                window.location = '../frontend/user/list_sale.php'; // Redirect after success
             });
         </script>";
     } else {

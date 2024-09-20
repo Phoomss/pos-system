@@ -44,7 +44,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.php" class="nav-link <?php if ($menu == "index") {
+                    <a href="list_sale.php" class="nav-link <?php if ($menu == "list_sale.php") {
                                                             echo "active";
                                                         } ?> ">
                         <i class="nav-icon fas fa-clipboard-list"></i>
