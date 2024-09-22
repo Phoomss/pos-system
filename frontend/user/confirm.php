@@ -111,6 +111,17 @@ if ($u_id != '') {
         die("Database query failed: " . mysqli_error($conn));
     }
 }
+
+// ดึงลำดับคิวล่าสุด
+$q_order = 1; // ค่าลำดับคิวเริ่มต้น
+$sql_last_q_order = "SELECT MAX(q_order) AS max_q_order FROM orders_table";
+$query_last_q_order = mysqli_query($conn, $sql_last_q_order);
+if ($query_last_q_order) {
+    $row_last_q_order = mysqli_fetch_assoc($query_last_q_order);
+    if ($row_last_q_order && !is_null($row_last_q_order['max_q_order'])) {
+        $q_order = $row_last_q_order['max_q_order'] + 1; // บวก 1 ให้กับลำดับคิวล่าสุด
+    }
+}
 ?>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -209,7 +220,7 @@ if ($u_id != '') {
                                 <div class="form-group row align-content-center justify-content-center">
                                     <label for="q_order" class="col-sm-2 col-form-label">ลำดับคิว</label>
                                     <div class="col-sm-4">
-                                        <input type="number" name="q_order" id="q_order" required class="form-control" placeholder="กรุณากรอกลำดับคิว">
+                                        <input type="number" name="q_order" id="q_order" required class="form-control" value="<?php echo $q_order; ?>" placeholder="กรุณากรอกลำดับคิว">
                                     </div>
                                 </div>
 
@@ -253,7 +264,6 @@ if ($u_id != '') {
                             <?php } ?>
                         </form>
                     </div>
-                    <div class="card-footer"></div>
                 </div>
             </section>
         </div>
