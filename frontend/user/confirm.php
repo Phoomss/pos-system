@@ -231,7 +231,7 @@ if ($query_last_q_order) {
                                 <div class="form-group row align-content-center justify-content-center" id="table_number_wrapper">
                                     <label for="table_number" class="col-sm-2 col-form-label">เลขโต๊ะ</label>
                                     <div class="col-sm-4">
-                                        <select name="table_number" id="table_number" class="form-control" required>
+                                        <select name="table_number" id="table_number" class="form-control" >
                                             <option value="" disabled selected>กรุณาเลือกเลขโต๊ะ</option>
                                             <?php for ($i = 1; $i <= 10; $i++): ?>
                                                 <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
