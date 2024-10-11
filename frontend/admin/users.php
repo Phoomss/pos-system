@@ -62,8 +62,7 @@ include '../../backend/config/condb.php';
 $result = $conn->query(
     "SELECT u.u_id, u.u_name, u.u_username, u.u_phone, r.r_name 
 FROM users_table u 
-INNER JOIN roles_table r ON u.r_id = r.r_id
-WHERE r.r_name = 'user'"
+INNER JOIN roles_table r ON u.r_id = r.r_id"
 );
 
 $conn->close();

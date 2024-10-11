@@ -43,25 +43,30 @@ if ($result_monthly->num_rows > 0) {
 
 // ดึงข้อมูลยอดขายตามประเภท
 $query_types = "SELECT 
-    od_status, 
-    COUNT(*) AS count,
-    SUM(pay_amount2) AS total_sales
+    DATE(o_date) AS order_date,
+    SUM(CASE WHEN od_status = 'กลับบ้าน' THEN 1 ELSE 0 END) AS count_takeaway,
+    SUM(CASE WHEN od_status = 'ทานที่ร้าน' THEN 1 ELSE 0 END) AS count_dinein
 FROM 
     orders_table
 GROUP BY 
-    od_status;";
+    DATE(o_date)
+ORDER BY 
+    order_date DESC";
+
 $result_types = $conn->query($query_types);
 
-$order_types = [];
-$order_counts = [];
-$order_totals = [];
+$order_dates = [];
+$takeaway_counts = []; // เก็บข้อมูลจำนวนการซื้อกลับบ้าน
+$dinein_counts = []; // เก็บข้อมูลจำนวนการทานที่ร้าน
 
 if ($result_types->num_rows > 0) {
     while ($row = $result_types->fetch_assoc()) {
-        $order_types[] = $row['od_status'];
-        $order_counts[] = $row['count'];
+        $order_dates[] = $row['order_date'];          // เก็บวันที่
+        $takeaway_counts[] = $row['count_takeaway'];  // เก็บจำนวนกลับบ้าน
+        $dinein_counts[] = $row['count_dinein'];      // เก็บจำนวนทานที่ร้าน
     }
 }
+
 
 // ดึงข้อมูลยอดขายรายปี
 $query_yearly = "SELECT YEAR(od.od_date) AS sales_year, SUM(o.pay_amount2) AS total_pay_amount
@@ -151,6 +156,14 @@ $conn->close(); // ปิดการเชื่อมต่อฐานข้�
                         <div class="col-md-6 mb-4">
                             <div class="card">
                                 <div class="card-body">
+                                    <h2 class="card-title">อัตราการซื้อกลับบ้านและทานที่ร้าน</h2>
+                                    <canvas id="orderTypeChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
                                     <h2 class="card-title">ยอดขายต่อเดือน</h2>
                                     <canvas id="monthlySalesChart"></canvas>
                                 </div>
@@ -164,14 +177,7 @@ $conn->close(); // ปิดการเชื่อมต่อฐานข้�
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h2 class="card-title">อัตราการซื้อกลับบ้านและทานที่ร้าน</h2>
-                                    <canvas id="orderTypeChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </section>
@@ -230,20 +236,22 @@ $conn->close(); // ปิดการเชื่อมต่อฐานข้�
         const orderTypeChart = new Chart(orderTypeCtx, {
             type: 'bar',
             data: {
-                labels: <?php echo json_encode($order_types); ?>,
+                labels: <?php echo json_encode($order_dates); ?>, // ใช้วันที่เป็น labels
                 datasets: [{
-                    label: 'อัตราการซื้อกลับบ้านและทานที่ร้าน',
-                    data: <?php echo json_encode($order_counts); ?>,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                        label: 'กลับบ้าน',
+                        data: <?php echo json_encode($takeaway_counts); ?>, // จำนวนการซื้อแบบกลับบ้าน
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)', // สีสำหรับกลับบ้าน
+                        borderColor: 'rgba(54, 162, 235, 1)', // เส้นขอบสำหรับกลับบ้าน
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'ทานที่ร้าน',
+                        data: <?php echo json_encode($dinein_counts); ?>, // จำนวนการซื้อแบบทานที่ร้าน
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)', // สีสำหรับทานที่ร้าน
+                        borderColor: 'rgba(255, 99, 132, 1)', // เส้นขอบสำหรับทานที่ร้าน
+                        borderWidth: 1
+                    }
+                ]
             },
             options: {
                 responsive: true,
@@ -253,11 +261,27 @@ $conn->close(); // ปิดการเชื่อมต่อฐานข้�
                     },
                     title: {
                         display: true,
-                        text: 'อัตราการซื้อกลับบ้านและทานที่ร้าน'
+                        text: 'อัตราการซื้อกลับบ้านและทานที่ร้าน (รายวัน)'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'วันที่'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'จำนวนการซื้อ'
+                        },
+                        beginAtZero: true
                     }
                 }
             }
         });
+
 
         const yearlyCtx = document.getElementById('yearlySalesChart').getContext('2d');
         const yearlySalesChart = new Chart(yearlyCtx, {

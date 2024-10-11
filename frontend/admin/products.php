@@ -104,7 +104,7 @@ $conn->close();
                                         <tr>
                                             <td><?php echo @$l += 1; ?></td>
                                             <td>
-                                            <img src="../../uploads/<?php echo $row_product['p_image']; ?>" class="img-thumbnail" width="120" alt="Product Image">
+                                            <img src="../../uploads/<?php echo $row_product['p_image']; ?>" class="img-thumbnail" alt="Product Image" style="width: 120px; height: 120px; object-fit: cover;">
                                             </td>
                                             <td><?php echo $row_product['p_name']; ?></td>
                                             <td><?php echo $row_product['p_detail']; ?></td>
@@ -192,23 +192,23 @@ $conn->close();
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="p_detail" class="col-sm-3 col-form-label">Detail </label>
+                            <label for="p_detail" class="col-sm-3 col-form-label">รายละเอียด </label>
                             <div class="col-sm-9">
                                 <textarea id="p_detail" name="p_detail" rows="3" class="form-control"></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="p_price" class="col-sm-3 col-form-label">Price </label>
+                            <label for="p_price" class="col-sm-3 col-form-label">ราคา </label>
                             <div class="col-sm-9">
                                 <input id="p_price" name="p_price" type="number" min="0" required class="form-control" placeholder="" minlength="3" />
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="p_image" class="col-sm-3 col-form-label">Image</label>
+                            <label for="p_image" class="col-sm-3 col-form-label">รูปภาพ</label>
                             <div class="col-sm-9">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="p_image" name="p_image" onchange="readURL(this);">
-                                    <label class="custom-file-label" for="p_image">Choose file</label>
+                                    <label class="custom-file-label" for="p_image">เลือกรูปภาพ</label>
                                 </div>
                                 <br><br>
                                 <img id="blah" src="#" alt="your image" width="300" style="display:none;" />

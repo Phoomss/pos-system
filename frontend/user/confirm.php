@@ -210,20 +210,6 @@ if ($query_last_q_order) {
                             </table>
 
                             <?php if ($u_id != '' && !empty($row_user)) { ?>
-                                <div class="form-group row align-content-center justify-content-center" id="table_number_wrapper">
-                                    <label for="table_number" class="col-sm-2 col-form-label">เลขโต๊ะ</label>
-                                    <div class="col-sm-4">
-                                        <input type="number" name="table_number" id="table_number" class="form-control" placeholder="กรุณากรอกเลขโต๊ะ">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row align-content-center justify-content-center">
-                                    <label for="q_order" class="col-sm-2 col-form-label">ลำดับคิว</label>
-                                    <div class="col-sm-4">
-                                        <input type="number" name="q_order" id="q_order" required class="form-control" value="<?php echo $q_order; ?>" placeholder="กรุณากรอกลำดับคิว">
-                                    </div>
-                                </div>
-
                                 <div class="form-group row align-content-center justify-content-center">
                                     <label for="od_status" class="col-sm-2 col-form-label">สถานะการสั่งซื้อ</label>
                                     <div class="col-sm-4">
@@ -235,12 +221,25 @@ if ($query_last_q_order) {
                                     </div>
                                 </div>
 
-                                <!-- <div class="from-group row align-content-center justify-content-center">
-                                    <label for="od_date" class="col-sm-2 col-form-label">วันที่</label>
+                                <div class="form-group row align-content-center justify-content-center">
+                                    <label for="q_order" class="col-sm-2 col-form-label">ลำดับคิว</label>
                                     <div class="col-sm-4">
-                                        <input type="date" name="od_date" id="od_date" required class="form-control" placeholder="กรุณากรอกวันที่">
+                                        <input type="number" name="q_order" id="q_order" required class="form-control" value="<?php echo $q_order; ?>" placeholder="กรุณากรอกลำดับคิว">
                                     </div>
-                                </div> -->
+                                </div>
+
+                                <div class="form-group row align-content-center justify-content-center" id="table_number_wrapper">
+                                    <label for="table_number" class="col-sm-2 col-form-label">เลขโต๊ะ</label>
+                                    <div class="col-sm-4">
+                                        <select name="table_number" id="table_number" class="form-control" required>
+                                            <option value="" disabled selected>กรุณาเลือกเลขโต๊ะ</option>
+                                            <?php for ($i = 1; $i <= 10; $i++): ?>
+                                                <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php endfor; ?>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="form-group row align-content-center justify-content-center">
                                     <label for="pay_amount1" class="col-sm-2 col-form-label">ยอดเงินที่ต้องชำระ</label>
                                     <div class="col-sm-4">
@@ -253,6 +252,14 @@ if ($query_last_q_order) {
                                         <input type="number" min="<?php echo $total; ?>" name="pay_amount2" id="pay_amount2" required class="form-control" placeholder="ยอดเงินที่รับชำระ">
                                     </div>
                                 </div>
+                                <!-- ฟิลด์ยอดเงินทอน -->
+                                <div class="form-group row align-content-center justify-content-center">
+                                    <label for="change_amount" class="col-sm-2 col-form-label">ยอดเงินทอน</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="change_amount" id="change_amount" readonly class="form-control" placeholder="ยอดเงินทอน">
+                                    </div>
+                                </div>
+
                                 <div class="form-group row align-content-center justify-content-center">
                                     <div class="col-sm-4 offset-sm-2">
                                         <input type="hidden" name="u_id" value="<?php echo htmlspecialchars($u_id); ?>">
@@ -283,6 +290,18 @@ if ($query_last_q_order) {
         } else {
             // แสดงแถว "เลขโต๊ะ" ถ้าเลือก "ทานที่ร้าน"
             tableNumberWrapper.style.display = 'flex';
+        }
+    });
+
+    document.getElementById('pay_amount2').addEventListener('input', function() {
+        var totalAmount = parseFloat(document.getElementById('pay_amount1').value.replace(',', ''));
+        var paidAmount = parseFloat(this.value);
+
+        if (!isNaN(paidAmount) && paidAmount >= totalAmount) {
+            var change = paidAmount - totalAmount;
+            document.getElementById('change_amount').value = change.toFixed(2);
+        } else {
+            document.getElementById('change_amount').value = '';
         }
     });
 </script>

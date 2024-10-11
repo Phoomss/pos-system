@@ -92,7 +92,7 @@ $row = mysqli_fetch_assoc($querypay); // ดึงข้อมูลของส
                             echo "<td align='right'>" . number_format($rspay['total'], 2) . "</td>";
                             echo "</tr>";
                         }
-                        include('../../convertnumtothai.php');
+                        include('../../backend/convertnumtothai.php');
                         ?>
                         <tr>
                             <td></td>

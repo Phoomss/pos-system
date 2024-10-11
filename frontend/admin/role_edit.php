@@ -102,7 +102,7 @@ if (isset($_GET['r_id']) && is_numeric($_GET['r_id'])) {
                                         </div>
 
                                         <!-- Submit Button -->
-                                        <button type="submit" class="btn btn-primary btn-block">อัปเดตสินค้า</button>
+                                        <button type="submit" class="btn btn-primary btn-block">อัปเดตสถานะผู้ใช้งาน</button>
                                     </form>
                                 </div>
                             </div>

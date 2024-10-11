@@ -174,6 +174,56 @@
                 });
             </script>";
         }
+    } elseif (isset($_POST['user']) && $_POST['user'] == "edit_profile_user") {
+        $userId = $_POST['u_id'];  // Ensure u_id is passed securely
+        $fullname = $_POST['u_name'];
+        $username = $_POST['u_username'];
+        $phone = $_POST['u_phone'];
+        $password = $_POST['u_password'];  // Get the password input
+
+        // Prepare SQL query depending on whether the user entered a new password
+        if (!empty($password)) {
+            // Hash the new password
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // SQL query to update user profile with password change
+            $sql = "UPDATE users_table SET u_name = ?, u_username = ?, u_password = ?, u_phone = ? WHERE u_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssi", $fullname, $username, $hashedPassword, $phone, $userId);
+        } else {
+            // SQL query to update user profile without changing the password
+            $sql = "UPDATE users_table SET u_name = ?, u_username = ?, u_phone = ? WHERE u_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssi", $fullname, $username, $phone, $userId);
+        }
+
+        // Execute the query
+        if ($stmt->execute()) {
+            // Success message with SweetAlert
+            echo "<script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'สำเร็จ',
+                    text: 'ข้อมูลโปรไฟล์ของคุณถูกอัปเดตเรียบร้อยแล้ว',
+                    confirmButtonText: 'ตกลง'
+                }).then(() => {
+                     window.location = '../frontend/user/user_info.php';
+                });
+            </script>";
+        } else {
+            // Error message if the query fails
+            error_log("MySQL Error: " . $stmt->error); // Log the error for debugging
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถอัปเดตโปรไฟล์ได้',
+                    confirmButtonText: 'ตกลง'
+               }).then(() => {
+                    window.location = '../frontend/user_info.php?profile_edit_error=error';
+                });
+            </script>";
+        }
     }
     ?>
 
